@@ -27,6 +27,9 @@ public class TasksServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json;charset=UTF-8");
+        resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+        resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
+        resp.setDateHeader("Expires", 0); // Proxies
         List<Task> tasks = dao.findAll();
         String json = gson.toJson(tasks);
         resp.getWriter().write(json);
@@ -72,8 +75,10 @@ public class TasksServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(idStr);
             boolean ok = dao.delete(id);
-            if (ok) resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            else resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            if (ok)
+                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            else
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }

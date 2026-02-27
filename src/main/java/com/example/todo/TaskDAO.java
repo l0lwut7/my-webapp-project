@@ -12,6 +12,14 @@ import java.util.List;
 public class TaskDAO {
     private final String url = "jdbc:sqlite:todo.db";
 
+    static {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("SQLite JDBC driver not found", e);
+        }
+    }
+
     public TaskDAO() {
         init();
     }

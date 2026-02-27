@@ -75,4 +75,17 @@ public class TaskDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean update(Task task) {
+        String sql = "UPDATE tasks SET title = ?, completed = ? WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, task.getTitle());
+            ps.setInt(2, task.isCompleted() ? 1 : 0);
+            ps.setInt(3, task.getId());
+            int affected = ps.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

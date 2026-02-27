@@ -84,6 +84,21 @@ public class TaskDAO {
         }
     }
 
+public Task findById(int id) {
+        String sql = "SELECT id, title, completed FROM tasks WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Task(rs.getInt("id"), rs.getString("title"), rs.getInt("completed") != 0);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
     public boolean update(Task task) {
         String sql = "UPDATE tasks SET title = ?, completed = ? WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
